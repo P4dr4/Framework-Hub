@@ -1,0 +1,25 @@
+name: CD Spring Boot
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Deploy to Heroku
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+        run: |
+          cd backend/springboot-app
+          git init
+          heroku git:remote -a your-heroku-app-name
+          git add .
+          git commit -am "Deploy to Heroku"
+          git push heroku main

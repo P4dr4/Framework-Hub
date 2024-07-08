@@ -1,0 +1,29 @@
+name: CI Angular
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  integration:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+
+      - name: Install dependencies
+        run: |
+          cd frontend/angular-app
+          npm install
+
+      - name: Build Angular project
+        run: |
+          cd frontend/angular-app
+          npm run build --prod

@@ -1,0 +1,34 @@
+name: Scaffold Project
+
+on:
+  workflow_dispatch:
+
+jobs:
+  scaffold:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Java
+        uses: actions/setup-java@v2
+        with:
+          java-version: '11'
+
+      - name: Scaffold Spring Boot project
+        run: |
+          mkdir -p backend
+          cd backend
+          curl https://start.spring.io/starter.zip -d dependencies=web -d name=springboot-app -o springboot-app.zip
+          unzip springboot-app.zip -d springboot-app
+        if: "!exists('backend/springboot-app')"
+
+      - name: Commit scaffolded projects
+        run: |
+          git config --global user.name 'github-actions'
+          git config --global user.email 'github-actions@github.com'
+          git add .
+          git commit -m "Scaffold Spring Boot project"
+          git push origin main
+        if: success()

@@ -1,0 +1,36 @@
+name: Scaffold Project
+
+on:
+  workflow_dispatch:
+
+jobs:
+  scaffold:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+
+      - name: Install Angular CLI
+        run: npm install -g @angular/cli
+
+      - name: Scaffold Angular project
+        run: |
+          mkdir -p frontend
+          cd frontend
+          ng new angular-app --skip-install
+        if: "!exists('frontend/angular-app')"
+
+      - name: Commit scaffolded projects
+        run: |
+          git config --global user.name 'github-actions'
+          git config --global user.email 'github-actions@github.com'
+          git add .
+          git commit -m "Scaffold Angular and Spring Boot projects"
+          git push origin main
+        if: success()
